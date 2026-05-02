@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TradeCalc — Investment Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/site.webmanifest">
+
+</head>
+<body>
+
+<!-- ─── Navbar ─────────────────────────────────────────── -->
+<nav>
+  <div class="logo">
+    <img src="/Frame 5 (3).png" alt="TradeCalc" class="logo-img" id="logoImg" />
+    TradeCalc
+    
+  </div>
+  
+  <div class="nav-badge"><span class="live-dot"></span>&nbsp; LIVE</div>
+</nav>
+
+
+
+<!-- ─── Main ───────────────────────────────────────────── -->
+<main class="main">
+
+  <!-- INPUT CARD -->
+  <div class="card" style="animation-delay: 0.1s;">
+    <div class="card-title">Trade Setup</div>
+
+    <!-- Trade Type -->
+    <div class="radio-group-label">⚡ Trade Direction</div>
+    <div class="radio-toggle">
+      <input type="radio" name="trade" id="long" value="long" checked />
+      <label for="long" class="long-label">
+        <span class="radio-dot"></span>
+        📈 Long
+      </label>
+      <input type="radio" name="trade" id="short" value="short" />
+      <label for="short" class="short-label">
+        <span class="radio-dot"></span>
+        📉 Short
+      </label>
+    </div>
+
+    <!-- Current Price -->
+    <div class="input-group">
+      <div class="input-label">💲 Current Price</div>
+      <div class="input-wrapper">
+        <span class="input-prefix">$</span>
+        <input class="input-field" type="number" id="currentPrice" placeholder="e.g. 42000" min="0" step="any" />
+      </div>
+    </div>
+
+    <!-- Future Price -->
+    <div class="input-group">
+      <div class="input-label">💵 Target Price</div>
+      <div class="input-wrapper">
+        <span class="input-prefix">$</span>
+        <input class="input-field" type="number" id="futurePrice" placeholder="e.g. 52000" min="0" step="any" />
+      </div>
+    </div>
+
+    <!-- Amount -->
+    <div class="input-group">
+      <div class="input-label">💰 Investment Amount (USD)</div>
+      <div class="input-wrapper">
+        <span class="input-prefix">$</span>
+        <input class="input-field" type="number" id="amount" placeholder="e.g. 1000" min="0" step="any" />
+      </div>
+    </div>
+
+  </div><!-- /input card -->
+
+  <!-- OUTPUT COLUMN -->
+  <div class="output-col">
+
+    <!-- BOX 1 — Profit -->
+    <div class="profit-card" id="profitCard">
+      <div class="profit-label">Estimated Profit</div>
+      <div class="profit-value" id="profitValue">$—</div>
+      <div class="profit-percent" id="profitPercent">Enter your trade details</div>
+      <div class="profit-meta">
+        <span id="metaType">⚡ Long</span>
+        <span id="metaRoi">   ROI: —</span>
+      </div>
+    </div>
+
+    <!-- BOX 2 — Take Profit -->
+    <div class="suggestion-card">
+      <div class="sugg-header">
+        <div class="sugg-title"><span class="sugg-icon-tp">✅</span> Take Profit Targets</div>
+      </div>
+      <div class="sugg-rows" id="tpRows">
+        <div class="empty-state">Fill in your trade to see targets ↑</div>
+      </div>
+    </div>
+
+    <!-- BOX 3 — Stop Loss -->
+    <div class="suggestion-card">
+      <div class="sugg-header">
+        <div class="sugg-title"><span class="sugg-icon-sl">🛑</span> Stop Loss Levels</div>
+      </div>
+      <div class="sugg-rows" id="slRows">
+        <div class="empty-state">Fill in your trade to see levels ↑</div>
+      </div>
+    </div>
+
+  </div><!-- /output col -->
+
+</main>
+<!-- ─── Hero ───────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-pill">📊 Smart Trading Calculator</div>
+  <h1>Calculate Your<br/><span>Investment Growth</span></h1>
+  
+</section>
+<!-- ─── Footer ─────────────────────────────────────────── -->
+<footer>
+  Built with 💚 by <span>Saleh Ahmed</span> &nbsp;·&nbsp; For informational use only &nbsp;·&nbsp; Not financial advice
+</footer>
+<script src="index.js"></script>
+
+</body>
+</html>
