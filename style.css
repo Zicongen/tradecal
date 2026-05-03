@@ -1,6 +1,4 @@
-
-  /* ─── CSS Variables ──────────────────────────────────── */
-  :root {
+:root {
     --g50:  #f0fdf4;
     --g100: #dcfce7;
     --g200: #bbf7d0;
@@ -23,7 +21,6 @@
     --radius-sm: 10px;
   }
 
-  /* ─── Reset ───────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -34,7 +31,6 @@
     overflow-x: hidden;
   }
 
-  /* ─── Background mesh ─────────────────────────────────── */
   body::before {
     content: '';
     position: fixed;
@@ -46,7 +42,6 @@
     z-index: -1;
   }
 
-  /* ─── Navbar ──────────────────────────────────────────── */
   nav {
     display: flex;
     align-items: center;
@@ -64,19 +59,11 @@
   .logo {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 10px;
     font-weight: 700;
     font-size: 1.25rem;
     color: var(--g700);
     letter-spacing: -0.3px;
-  }
-
-  .logo-img {
-    width: 40px;
-    height: 40px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 6px rgba(22,163,74,0.25));
   }
 
   .nav-badge {
@@ -90,11 +77,9 @@
     letter-spacing: 0.5px;
   }
 
-  /* ─── Hero ────────────────────────────────────────────── */
   .hero {
     text-align: center;
     padding: 72px 24px 40px;
-    position: relative;
   }
 
   .hero-pill {
@@ -134,15 +119,14 @@
     font-size: 1.05rem;
     color: var(--muted);
     font-weight: 400;
-    max-width: 460px;
+    max-width: 480px;
     margin: 0 auto;
     line-height: 1.7;
     animation: fadeSlideDown 0.8s ease both;
   }
 
-  /* ─── Main layout ─────────────────────────────────────── */
   .main {
-    max-width: 1020px;
+    max-width: 1040px;
     margin: 0 auto;
     padding: 20px 24px 80px;
     display: grid;
@@ -156,7 +140,6 @@
     nav { padding: 14px 20px; }
   }
 
-  /* ─── Card base ───────────────────────────────────────── */
   .card {
     background: var(--card);
     border-radius: var(--radius);
@@ -187,10 +170,7 @@
     border-radius: 4px;
   }
 
-  /* ─── Input group ─────────────────────────────────────── */
-  .input-group {
-    margin-bottom: 20px;
-  }
+  .input-group { margin-bottom: 20px; }
 
   .input-label {
     font-size: 0.82rem;
@@ -218,6 +198,15 @@
     pointer-events: none;
   }
 
+  .input-suffix {
+    position: absolute;
+    right: 14px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--g500);
+    pointer-events: none;
+  }
+
   .input-field {
     width: 100%;
     padding: 13px 14px 13px 36px;
@@ -233,6 +222,8 @@
     -moz-appearance: textfield;
   }
 
+  .input-field.with-suffix { padding-right: 46px; }
+
   .input-field::-webkit-outer-spin-button,
   .input-field::-webkit-inner-spin-button { -webkit-appearance: none; }
 
@@ -244,7 +235,110 @@
     box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
   }
 
-  /* ─── Radio group ─────────────────────────────────────── */
+  /* ── Leverage Slider ── */
+  .leverage-section { margin-bottom: 20px; }
+
+  .leverage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .leverage-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .leverage-badge {
+    background: linear-gradient(135deg, var(--g600), var(--g500));
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    min-width: 52px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .leverage-presets {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .lev-btn {
+    flex: 1;
+    min-width: 44px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 2px solid var(--g200);
+    background: var(--g50);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+  }
+
+  .lev-btn:hover {
+    border-color: var(--g400);
+    color: var(--g600);
+    background: var(--g100);
+  }
+
+  .lev-btn.active {
+    border-color: var(--g500);
+    background: linear-gradient(135deg, var(--g50), #e8fdf0);
+    color: var(--g700);
+    box-shadow: 0 2px 10px rgba(34,197,94,0.2);
+  }
+
+  .leverage-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--g200);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .leverage-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--g500), var(--g600));
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.4);
+    border: 2px solid #fff;
+    transition: transform 0.15s;
+  }
+
+  .leverage-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  .leverage-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--g500), var(--g600));
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.4);
+  }
+
+  /* ── Fee Toggle ── */
   .radio-group-label {
     font-size: 0.82rem;
     font-weight: 600;
@@ -253,7 +347,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    letter-spacing: 0.1px;
   }
 
   .radio-toggle {
@@ -283,23 +376,12 @@
     overflow: hidden;
   }
 
-  .radio-toggle label::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(21,128,61,0.08));
-    opacity: 0;
-    transition: opacity 0.22s;
-  }
-
   .radio-toggle input[type="radio"]:checked + label {
     border-color: var(--g500);
     background: linear-gradient(135deg, var(--g50), #e8fdf0);
     color: var(--g700);
     box-shadow: 0 3px 14px rgba(34,197,94,0.18);
   }
-
-  .radio-toggle input[type="radio"]:checked + label::after { opacity: 1; }
 
   .radio-dot {
     width: 8px;
@@ -315,11 +397,7 @@
     box-shadow: 0 0 0 3px rgba(34,197,94,0.25);
   }
 
-  /* Long = upward arrow, Short = downward arrow feel */
-  .radio-toggle label.long-label { }
-  .radio-toggle label.short-label { }
-
-  /* ─── Right column ────────────────────────────────────── */
+  /* ── Output column ── */
   .output-col {
     display: flex;
     flex-direction: column;
@@ -327,11 +405,11 @@
     animation: fadeSlideUp 0.85s ease both;
   }
 
-  /* ─── Profit card ─────────────────────────────────────── */
+  /* ── Profit card ── */
   .profit-card {
     background: linear-gradient(135deg, var(--g700) 0%, var(--g600) 60%, var(--g500) 100%);
     border-radius: var(--radius);
-    padding: 32px;
+    padding: 28px 32px;
     color: #fff;
     position: relative;
     overflow: hidden;
@@ -342,10 +420,8 @@
   .profit-card::before {
     content: '';
     position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 180px;
-    height: 180px;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
     border-radius: 50%;
     background: rgba(255,255,255,0.06);
   }
@@ -353,10 +429,8 @@
   .profit-card::after {
     content: '';
     position: absolute;
-    bottom: -60px;
-    left: -30px;
-    width: 220px;
-    height: 220px;
+    bottom: -60px; left: -30px;
+    width: 220px; height: 220px;
     border-radius: 50%;
     background: rgba(255,255,255,0.04);
   }
@@ -393,18 +467,54 @@
     z-index: 1;
   }
 
+  /* ── ROI row with fee breakdown ── */
   .profit-meta {
     display: flex;
-    gap: 20px;
-    font-size: 0.8rem;
-    opacity: 0.7;
+    flex-direction: column;
+    gap: 8px;
     position: relative;
     z-index: 1;
   }
 
-  .profit-meta span { display: flex; align-items: center; gap: 4px; }
+  .profit-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
 
-  /* ─── Suggestion cards ────────────────────────────────── */
+  .profit-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.79rem;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+
+  .profit-meta-divider {
+    height: 1px;
+    background: rgba(255,255,255,0.15);
+    margin: 2px 0;
+  }
+
+  .fee-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  .fee-pill.maker { background: rgba(255,255,255,0.12); }
+  .fee-pill.taker { background: rgba(255,100,100,0.25); border-color: rgba(255,150,150,0.3); }
+
+  /* ── Suggestion cards ── */
   .suggestion-card {
     background: var(--card);
     border-radius: var(--radius);
@@ -480,15 +590,9 @@
     border-color: #fecaca;
   }
 
-  .sugg-label {
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--muted);
-  }
+  .sugg-label { font-size: 0.82rem; font-weight: 500; color: var(--muted); }
 
-  .sugg-values {
-    text-align: right;
-  }
+  .sugg-values { text-align: right; }
 
   .sugg-price {
     font-size: 0.9rem;
@@ -500,16 +604,9 @@
 
   .sugg-price.sl-price { color: #dc2626; }
 
-  .sugg-gain {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--g500);
-    display: block;
-  }
-
+  .sugg-gain { font-size: 0.72rem; font-weight: 600; color: var(--g500); display: block; }
   .sugg-gain.sl-gain { color: #dc2626; }
 
-  /* ─── Empty state ─────────────────────────────────────── */
   .empty-state {
     text-align: center;
     padding: 20px 10px;
@@ -518,35 +615,21 @@
     font-weight: 500;
   }
 
-  /* ─── Trade direction indicator ───────────────────────── */
-  .trade-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: var(--radius-sm);
+  /* ── Position size card ── */
+  .position-info {
     background: var(--g50);
     border: 1.5px solid var(--g200);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--muted);
-    margin-bottom: 16px;
-    transition: all 0.3s;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
   }
 
-  .trade-indicator.long {
-    background: #f0fdf4;
-    border-color: var(--g300);
-    color: var(--g700);
-  }
+  .pos-label { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+  .pos-value { font-size: 0.95rem; font-weight: 800; color: var(--g700); }
 
-  .trade-indicator.short {
-    background: #fef2f2;
-    border-color: #fecaca;
-    color: #dc2626;
-  }
-
-  /* ─── Footer ──────────────────────────────────────────── */
   footer {
     text-align: center;
     padding: 32px 24px;
@@ -559,7 +642,6 @@
 
   footer span { color: var(--g500); font-weight: 600; }
 
-  /* ─── Animations ──────────────────────────────────────── */
   @keyframes fadeSlideDown {
     from { opacity: 0; transform: translateY(-18px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -575,9 +657,7 @@
     50%       { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
   }
 
-  .value-updated {
-    animation: valueFlash 0.4s ease;
-  }
+  .value-updated { animation: valueFlash 0.4s ease; }
 
   @keyframes valueFlash {
     0%   { opacity: 0.4; transform: scale(0.97); }
