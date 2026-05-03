@@ -87,7 +87,7 @@
 
   .hero {
     text-align: center;
-    padding: 72px 24px 40px;
+    padding: 0px;
   }
 
   .hero-pill {
@@ -133,12 +133,12 @@
   }
 
   .main {
-     max-width: 1040px;
+   max-width: 1040px;
     margin: 0 auto;
-    padding: 0px;
+    padding: 20px 24px 80px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 5px;
+    gap: 24px;
     align-items: start;
   }
 
