@@ -135,8 +135,8 @@
 
   .main {
     max-width: 1040px;
-    margin-top: 10px;
-    margin: 0 auto;
+    margin-top: 50px;
+   
     padding: 20px 24px 80px;
     display: grid;
     grid-template-columns: 1fr 1fr;
