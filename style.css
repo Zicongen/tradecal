@@ -42,7 +42,7 @@
     z-index: -1;
   }
 
-  nav {
+   nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -59,11 +59,19 @@
   .logo {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     font-weight: 700;
     font-size: 1.25rem;
     color: var(--g700);
     letter-spacing: -0.3px;
+  }
+
+  .logo-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(22,163,74,0.25));
   }
 
   .nav-badge {
