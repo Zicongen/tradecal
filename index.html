@@ -25,25 +25,24 @@
   <div class="nav-badge"><span class="live-dot"></span>&nbsp; LIVE</div>
 </nav>
 
+<!--MAIN SECTION-->
 
-
-<!-- ─── Main ───────────────────────────────────────────── -->
 <main class="main">
 
   <!-- INPUT CARD -->
   <div class="card" style="animation-delay: 0.1s;">
     <div class="card-title">Trade Setup</div>
 
-    <!-- Trade Type -->
+    <!-- Trade Direction -->
     <div class="radio-group-label">⚡ Trade Direction</div>
     <div class="radio-toggle">
       <input type="radio" name="trade" id="long" value="long" checked />
-      <label for="long" class="long-label">
+      <label for="long">
         <span class="radio-dot"></span>
         📈 Long
       </label>
       <input type="radio" name="trade" id="short" value="short" />
-      <label for="short" class="short-label">
+      <label for="short">
         <span class="radio-dot"></span>
         📉 Short
       </label>
@@ -51,7 +50,7 @@
 
     <!-- Current Price -->
     <div class="input-group">
-      <div class="input-label">💲 Current Price</div>
+      <div class="input-label">💲 Entry Price</div>
       <div class="input-wrapper">
         <span class="input-prefix">$</span>
         <input class="input-field" type="number" id="currentPrice" placeholder="e.g. 42000" min="0" step="any" />
@@ -60,66 +59,106 @@
 
     <!-- Future Price -->
     <div class="input-group">
-      <div class="input-label">💵 Target Price</div>
+      <div class="input-label">🎯 Exit / Target Price</div>
       <div class="input-wrapper">
         <span class="input-prefix">$</span>
         <input class="input-field" type="number" id="futurePrice" placeholder="e.g. 52000" min="0" step="any" />
       </div>
     </div>
 
-    <!-- Amount -->
+    <!-- Amount (Margin) -->
     <div class="input-group">
-      <div class="input-label">💰 Investment Amount (USD)</div>
+      <div class="input-label">💰 Margin (Collateral)</div>
       <div class="input-wrapper">
         <span class="input-prefix">$</span>
         <input class="input-field" type="number" id="amount" placeholder="e.g. 1000" min="0" step="any" />
       </div>
     </div>
 
-  </div><!-- /input card -->
+    <!-- Leverage -->
+    <div class="leverage-section">
+      <div class="leverage-header">
+        <div class="leverage-label">🟢 Leverage</div>
+        <div class="leverage-badge" id="leverageDisplay">10×</div>
+      </div>
+      <div class="leverage-presets">
+        <button class="lev-btn" data-lev="1">1×</button>
+        <button class="lev-btn" data-lev="2">2×</button>
+        <button class="lev-btn" data-lev="3">3×</button>
+        <button class="lev-btn" data-lev="5">5×</button>
+        <button class="lev-btn active" data-lev="10">10×</button>
+        <button class="lev-btn" data-lev="20">20×</button>
+        <button class="lev-btn" data-lev="50">50×</button>
+        <button class="lev-btn" data-lev="100">100×</button>
+      </div>
+      <input type="range" class="leverage-slider" id="leverageSlider" min="1" max="100" value="10" step="1" />
+      <!-- Position size info -->
+      <div class="position-info" id="positionInfo" style="display:none;">
+        <span class="pos-label"> Position Size</span>
+        <span class="pos-value" id="positionSize">—</span>
+      </div>
+    </div>
+
+  </div>
 
   <!-- OUTPUT COLUMN -->
   <div class="output-col">
 
-    <!-- BOX 1 — Profit -->
+    <!-- Profit card -->
     <div class="profit-card" id="profitCard">
-      <div class="profit-label">Estimated Profit</div>
+      <div class="profit-label">Estimated Net Profit</div>
       <div class="profit-value" id="profitValue">$—</div>
       <div class="profit-percent" id="profitPercent">Enter your trade details</div>
       <div class="profit-meta">
-        <span id="metaType">⚡ Long</span>
-        <span id="metaRoi">   ROI: —</span>
+        <div class="profit-meta-divider"></div>
+        <div class="profit-meta-row">
+          <span class="profit-meta-item" id="metaType">⚡ Long</span>
+          <span class="profit-meta-item" id="metaLeverage">1× Leverage</span>
+          <span class="profit-meta-item" id="metaRoi">ROI: —</span>
+        </div>
+        <div class="profit-meta-divider"></div>
+        <div class="profit-meta-row" id="feeRow" style="display:none;">
+          <span class="profit-meta-item"> Fees (Maker+Taker)</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="fee-pill maker">0.020%+0.050%</span>
+            <span class="profit-meta-item" id="metaFee">—</span>
+          </div>
+        </div>
+        <div class="profit-meta-row" id="grossRow" style="display:none;">
+          <span class="profit-meta-item" style="opacity:0.6;">Gross P&amp;L (before fees)</span>
+          <span class="profit-meta-item" id="metaGross" style="opacity:0.6;">—</span>
+        </div>
       </div>
     </div>
 
-    <!-- BOX 2 — Take Profit -->
+    <!-- Take Profit -->
     <div class="suggestion-card">
       <div class="sugg-header">
-        <div class="sugg-title"><span class="sugg-icon-tp">✅</span> Take Profit Targets</div>
+        <div class="sugg-title"><span class="sugg-icon-tp">🟢</span> Take Profit Targets</div>
       </div>
       <div class="sugg-rows" id="tpRows">
         <div class="empty-state">Fill in your trade to see targets ↑</div>
       </div>
     </div>
 
-    <!-- BOX 3 — Stop Loss -->
+    <!-- Stop Loss -->
     <div class="suggestion-card">
       <div class="sugg-header">
-        <div class="sugg-title"><span class="sugg-icon-sl">🛑</span> Stop Loss Levels</div>
+        <div class="sugg-title"><span class="sugg-icon-sl">🔴</span> Stop Loss Levels</div>
       </div>
       <div class="sugg-rows" id="slRows">
         <div class="empty-state">Fill in your trade to see levels ↑</div>
       </div>
     </div>
 
-  </div><!-- /output col -->
+  </div>
 
 </main>
 <!-- ─── Hero ───────────────────────────────────────────── -->
 <section class="hero">
-  <div class="hero-pill">📊 Smart Trading Calculator</div>
-  <h1>Calculate Your<br/><span>Investment Growth</span></h1>
-  
+  <div class="hero-pill">⚡ Futures Trading Calculator</div>
+  <h1>Calculate Your<br/><span>Futures P&amp;L</span></h1>
+  <p>Input your leverage, fees, and trade details to get accurate profit projections, take profit targets, and stop loss levels — instantly.</p>
 </section>
 <!-- ─── Footer ─────────────────────────────────────────── -->
 <footer>
