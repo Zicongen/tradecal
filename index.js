@@ -189,7 +189,7 @@
           </div>
           <div class="sugg-values">
             <span class="sugg-price">${fmtPrice(tpPrice)}</span>
-            <span class="sugg-gain">${tpNet >= 0 ? '+' : ''}$${fmt(tpNet)} &nbsp;·&nbsp; ROI ${fmt(tpRoi)}%</span>
+            <span class="sugg-gain">PROFIT ${tpNet >= 0 ? '+' : ''}$${fmt(tpNet)} &nbsp;·&nbsp; ROI ${fmt(tpRoi)}%</span>
           </div>
         </div>`;
     });
@@ -216,7 +216,7 @@
           </div>
           <div class="sugg-values">
             <span class="sugg-price sl-price">${fmtPrice(slPrice)}</span>
-            <span class="sugg-gain sl-gain">-$${fmt(slNet)} &nbsp;·&nbsp; ROI ${fmt(slRoi)}%</span>
+            <span class="sugg-gain sl-gain">LOSS -$${fmt(slNet)} &nbsp;·&nbsp; ROI ${fmt(slRoi)}%</span>
           </div>
         </div>`;
     });
