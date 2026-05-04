@@ -31,11 +31,11 @@
 <!--MAIN SECTION-->
 
 <main class="main">
-
+ 
   <!-- INPUT CARD -->
   <div class="card" style="animation-delay: 0.1s;">
     <div class="card-title">Trade Setup</div>
-
+ 
     <!-- Trade Direction -->
     <div class="radio-group-label">⚡ Trade Direction</div>
     <div class="radio-toggle">
@@ -50,25 +50,43 @@
         📉 Short
       </label>
     </div>
-
-    <!-- Current Price -->
+ 
+    <!-- Entry Price -->
     <div class="input-group">
       <div class="input-label">💲 Entry Price</div>
-      <div class="input-wrapper">
-        <span class="input-prefix">$</span>
-        <input class="input-field" type="number" id="currentPrice" placeholder="e.g. 42000" min="0" step="any" />
+      <div class="input-row">
+        <div class="input-wrapper">
+          <span class="input-prefix">$</span>
+          <input class="input-field" type="number" id="currentPrice" placeholder="e.g. 42000" min="0" step="any" />
+        </div>
+        <div class="order-type-toggle">
+          <input type="radio" name="entryType" id="entryMarket" value="market" checked />
+          <label for="entryMarket"><span class="ot-dot"></span>MARKET</label>
+          <input type="radio" name="entryType" id="entryLimit" value="limit" />
+          <label for="entryLimit"><span class="ot-dot"></span>LIMIT</label>
+        </div>
       </div>
+      <div class="order-fee-tag" id="entryFeeTag">Entry fee: 0.050% (Taker)</div>
     </div>
-
-    <!-- Future Price -->
+ 
+    <!-- Exit Price -->
     <div class="input-group">
       <div class="input-label">🎯 Exit / Target Price</div>
-      <div class="input-wrapper">
-        <span class="input-prefix">$</span>
-        <input class="input-field" type="number" id="futurePrice" placeholder="e.g. 52000" min="0" step="any" />
+      <div class="input-row">
+        <div class="input-wrapper">
+          <span class="input-prefix">$</span>
+          <input class="input-field" type="number" id="futurePrice" placeholder="e.g. 52000" min="0" step="any" />
+        </div>
+        <div class="order-type-toggle">
+          <input type="radio" name="exitType" id="exitMarket" value="market" checked />
+          <label for="exitMarket"><span class="ot-dot"></span>MARKET</label>
+          <input type="radio" name="exitType" id="exitLimit" value="limit" />
+          <label for="exitLimit"><span class="ot-dot"></span>LIMIT</label>
+        </div>
       </div>
+      <div class="order-fee-tag" id="exitFeeTag">Exit fee: 0.050% (Taker)</div>
     </div>
-
+ 
     <!-- Amount (Margin) -->
     <div class="input-group">
       <div class="input-label">💰 Margin (Collateral)</div>
@@ -77,7 +95,7 @@
         <input class="input-field" type="number" id="amount" placeholder="e.g. 1000" min="0" step="any" />
       </div>
     </div>
-
+ 
     <!-- Leverage -->
     <div class="leverage-section">
       <div class="leverage-header">
@@ -101,12 +119,12 @@
         <span class="pos-value" id="positionSize">—</span>
       </div>
     </div>
-
+ 
   </div>
-
+ 
   <!-- OUTPUT COLUMN -->
   <div class="output-col">
-
+ 
     <!-- Profit card -->
     <div class="profit-card" id="profitCard">
       <div class="profit-label">Estimated Net Profit</div>
@@ -121,9 +139,9 @@
         </div>
         <div class="profit-meta-divider"></div>
         <div class="profit-meta-row" id="feeRow" style="display:none;">
-          <span class="profit-meta-item"> Fees (Maker+Taker)</span>
+          <span class="profit-meta-item"> Total Fees</span>
           <div style="display:flex;gap:6px;align-items:center;">
-            <span class="fee-pill maker">0.020%+0.050%</span>
+            <span class="fee-pill" id="feeTypePill">—</span>
             <span class="profit-meta-item" id="metaFee">—</span>
           </div>
         </div>
@@ -133,7 +151,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- Take Profit -->
     <div class="suggestion-card">
       <div class="sugg-header">
@@ -143,7 +161,7 @@
         <div class="empty-state">Fill in your trade to see targets ↑</div>
       </div>
     </div>
-
+ 
     <!-- Stop Loss -->
     <div class="suggestion-card">
       <div class="sugg-header">
@@ -153,10 +171,11 @@
         <div class="empty-state">Fill in your trade to see levels ↑</div>
       </div>
     </div>
-
+ 
   </div>
-
+ 
 </main>
+
 
 
 <!-- ─── Footer ─────────────────────────────────────────── -->
