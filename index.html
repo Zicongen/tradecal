@@ -151,7 +151,36 @@
         </div>
       </div>
     </div>
+ <div class="liq-card" id="liqCard">
+      <div class="liq-header">
+        <div class="liq-title"> Liquidation Price</div>
+        <div class="liq-warning-badge" id="liqWarningBadge">⚠ </div>
+      </div>
  
+      <div class="liq-body">
+        <div class="liq-price-block">
+          <div class="liq-price-label">Estimated liquidation at</div>
+          <div class="liq-price-value empty" id="liqPriceValue">Enter trade details</div>
+        </div>
+        <div class="liq-distance-block" id="liqDistBlock" style="display:none;">
+          <div class="liq-distance-pill" id="liqDistPill">
+            <span class="liq-dist-pct" id="liqDistPct">—</span>
+            <span class="liq-dist-label" id="liqDistLabel">from entry</span>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="liq-progress-wrap" id="liqProgressWrap" style="display:none;">
+        <div class="liq-progress-header">
+          <span>Entry</span>
+          <span id="liqProgressLabel">Distance to liquidation</span>
+          <span>Liquidation</span>
+        </div>
+        <div class="liq-progress-track">
+          <div class="liq-progress-fill" id="liqProgressFill"></div>
+        </div>
+      </div>
+    </div>
     <!-- Take Profit -->
     <div class="suggestion-card">
       <div class="sugg-header">
