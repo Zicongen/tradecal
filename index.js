@@ -143,7 +143,7 @@ function calculate() {
       liqBadge.textContent = '⚠ MODERATE RISK';
       liqBadge.className   = 'liq-badge';
     } else {
-      liqBadge.textContent = '✅ LOWER RISK';
+      liqBadge.textContent = '🟢 LOWER RISK';
       liqBadge.className   = 'liq-badge safe';
     }
   } else {
