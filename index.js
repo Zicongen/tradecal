@@ -1,7 +1,7 @@
 // ── Constants ──
 const MAKER_FEE  = 0.0002;  // 0.020%
 const TAKER_FEE  = 0.0005;  // 0.050%
-const MAINT_RATE = 0;   // 0% maintenance margin
+const MAINT_RATE = 0.0133;   // 1.33% maintenance margin
  
 // ── DOM ──
 const entryEl    = document.getElementById('currentPrice');
@@ -73,10 +73,10 @@ function getRadio(radios) {
 //   Short: price moves opposite direction.
 function calcLiqPrice(entry, leverage, type, entryFeeRate) {
   if (type === 'long') {
-    return entry * (1 - 1/leverage  + entryFeeRate);
+    return entry * (1 - 1/leverage + MAINT_RATE  + entryFeeRate);
   } else {
     // Short liq is above entry; entry fee increases required equity so liq is also slightly higher
-    return entry * (1 + 1/leverage  - entryFeeRate);
+    return entry * (1 + 1/leverage - 0.037);
   }
 }
  
