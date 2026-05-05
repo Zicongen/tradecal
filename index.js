@@ -76,7 +76,7 @@ function calcLiqPrice(entry, leverage, type, entryFeeRate) {
     return entry * (1 - 1/leverage + MAINT_RATE  + entryFeeRate);
   } else {
     // Short liq is above entry; entry fee increases required equity so liq is also slightly higher
-    return entry * (1 + 1/leverage - 0.037);
+    return entry * (1 + 1/leverage - 0.0367);
   }
 }
  
