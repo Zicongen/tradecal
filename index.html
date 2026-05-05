@@ -14,197 +14,152 @@
 </head>
 <body>
 
-<!-- ─── Navbar ─────────────────────────────────────────── -->
-<nav>
-  <div class="logo">
-    <img src="Frame 5 (3).png" alt="TradeCalc" class="logo-img" id="logoImg" />
-    TradeCalc
-    
-  </div>
-  <div class="hero-pill">⚡ Futures Trading Calculator</div>
-  <div class="nav-badge"><span class="live-dot"></span>&nbsp; LIVE</div>
-</nav>
-  <!-- ─── Hero ───────────────────────────────────────────── -->
-<section class="hero">
- <p>.</p>
-</section>
-<!--MAIN SECTION-->
-
-<main class="main">
+<div class="header">
+  <h1>FUTURES <span>PnL</span> CALCULATOR</h1>
+  <p>perpetual · cross-margin · maker/taker fees</p>
+</div>
  
-  <!-- INPUT CARD -->
-  <div class="card" style="animation-delay: 0.1s;">
-    <div class="card-title">Trade Setup</div>
+<div class="layout">
  
-    <!-- Trade Direction -->
-    <div class="radio-group-label">⚡ Trade Direction</div>
-    <div class="radio-toggle">
-      <input type="radio" name="trade" id="long" value="long" checked />
-      <label for="long">
-        <span class="radio-dot"></span>
-        📈 Long
-      </label>
-      <input type="radio" name="trade" id="short" value="short" />
-      <label for="short">
-        <span class="radio-dot"></span>
-        📉 Short
-      </label>
-    </div>
+  <!-- LEFT COLUMN: Inputs -->
+  <div class="col">
  
-    <!-- Entry Price -->
-    <div class="input-group">
-      <div class="input-label">💲 Entry Price</div>
-      <div class="input-row">
-        <div class="input-wrapper">
-          <span class="input-prefix">$</span>
-          <input class="input-field" type="number" id="currentPrice" placeholder="e.g. 42000" min="0" step="any" />
-        </div>
-        <div class="order-type-toggle">
-          <input type="radio" name="entryType" id="entryMarket" value="market" checked />
-          <label for="entryMarket"><span class="ot-dot"></span>MARKET</label>
-          <input type="radio" name="entryType" id="entryLimit" value="limit" />
-          <label for="entryLimit"><span class="ot-dot"></span>LIMIT</label>
-        </div>
+    <!-- Prices & Margin -->
+    <div class="card">
+      <div class="card-title">Trade Setup</div>
+ 
+      <div class="pill-label">Direction</div>
+      <div class="pill-row" style="margin-bottom:14px">
+        <div class="pill-opt"><input type="radio" name="trade" id="rLong" value="long" checked /><label for="rLong">⬆ Long</label></div>
+        <div class="pill-opt red"><input type="radio" name="trade" id="rShort" value="short" /><label for="rShort">⬇ Short</label></div>
       </div>
-      <div class="order-fee-tag" id="entryFeeTag">Entry fee: 0.050% (Taker)</div>
-    </div>
  
-    <!-- Exit Price -->
-    <div class="input-group">
-      <div class="input-label">🎯 Exit / Target Price</div>
-      <div class="input-row">
-        <div class="input-wrapper">
-          <span class="input-prefix">$</span>
-          <input class="input-field" type="number" id="futurePrice" placeholder="e.g. 52000" min="0" step="any" />
-        </div>
-        <div class="order-type-toggle">
-          <input type="radio" name="exitType" id="exitMarket" value="market" checked />
-          <label for="exitMarket"><span class="ot-dot"></span>MARKET</label>
-          <input type="radio" name="exitType" id="exitLimit" value="limit" />
-          <label for="exitLimit"><span class="ot-dot"></span>LIMIT</label>
-        </div>
+      <div class="input-group">
+        <label for="currentPrice">Entry Price ($)</label>
+        <input type="number" id="currentPrice" placeholder="e.g. 65000" min="0" step="any" />
       </div>
-      <div class="order-fee-tag" id="exitFeeTag">Exit fee: 0.050% (Taker)</div>
-    </div>
- 
-    <!-- Amount (Margin) -->
-    <div class="input-group">
-      <div class="input-label">💰 Margin (Collateral)</div>
-      <div class="input-wrapper">
-        <span class="input-prefix">$</span>
-        <input class="input-field" type="number" id="amount" placeholder="e.g. 1000" min="0" step="any" />
+      <div class="input-group">
+        <label for="futurePrice">Exit / Target Price ($)</label>
+        <input type="number" id="futurePrice" placeholder="e.g. 70000" min="0" step="any" />
+      </div>
+      <div class="input-group">
+        <label for="amount">Margin / Collateral ($)</label>
+        <input type="number" id="amount" placeholder="e.g. 1000" min="0" step="any" />
       </div>
     </div>
  
     <!-- Leverage -->
-    <div class="leverage-section">
-      <div class="leverage-header">
-        <div class="leverage-label">🟢 Leverage</div>
-        <div class="leverage-badge" id="leverageDisplay">10×</div>
+    <div class="card">
+      <div class="card-title">Leverage</div>
+      <div class="lev-header">
+        <span style="font-size:12px;color:var(--sub);font-family:var(--mono)">1× — 100×</span>
+        <span class="lev-val" id="leverageDisplay">10×</span>
       </div>
-      <div class="leverage-presets">
-        <button class="lev-btn" data-lev="1">1×</button>
+      <input type="range" id="leverageSlider" min="1" max="100" value="10" />
+      <div class="lev-btns">
         <button class="lev-btn" data-lev="2">2×</button>
-        <button class="lev-btn" data-lev="3">3×</button>
         <button class="lev-btn" data-lev="5">5×</button>
         <button class="lev-btn active" data-lev="10">10×</button>
         <button class="lev-btn" data-lev="20">20×</button>
         <button class="lev-btn" data-lev="50">50×</button>
         <button class="lev-btn" data-lev="100">100×</button>
       </div>
-      <input type="range" class="leverage-slider" id="leverageSlider" min="1" max="100" value="10" step="1" />
-      <!-- Position size info -->
-      <div class="position-info" id="positionInfo" style="display:none;">
-        <span class="pos-label"> Position Size</span>
-        <span class="pos-value" id="positionSize">—</span>
+    </div>
+ 
+    <!-- Order Types -->
+    <div class="card">
+      <div class="card-title">Order Types &amp; Fees</div>
+ 
+      <div class="pill-label">Entry Order</div>
+      <div class="pill-row">
+        <div class="pill-opt"><input type="radio" name="entryType" id="eMarket" value="market" checked /><label for="eMarket">Market (Taker)</label></div>
+        <div class="pill-opt"><input type="radio" name="entryType" id="eLimit" value="limit" /><label for="eLimit">Limit (Maker)</label></div>
+      </div>
+ 
+      <div class="pill-label">Exit Order</div>
+      <div class="pill-row">
+        <div class="pill-opt"><input type="radio" name="exitType" id="xMarket" value="market" checked /><label for="xMarket">Market (Taker)</label></div>
+        <div class="pill-opt"><input type="radio" name="exitType" id="xLimit" value="limit" /><label for="xLimit">Limit (Maker)</label></div>
+      </div>
+ 
+      <div class="fee-tags">
+        <span class="fee-tag" id="entryFeeTag">Entry: 0.050% (Taker)</span>
+        <span class="fee-tag" id="exitFeeTag">Exit: 0.050% (Taker)</span>
       </div>
     </div>
  
-  </div>
+  </div><!-- /left col -->
  
-  <!-- OUTPUT COLUMN -->
-  <div class="output-col">
+  <!-- RIGHT COLUMN: Results -->
+  <div class="col">
  
-    <!-- Profit card -->
-    <div class="profit-card" id="profitCard">
-      <div class="profit-label">Estimated Net Profit</div>
-      <div class="profit-value" id="profitValue">$—</div>
-      <div class="profit-percent" id="profitPercent">Enter your trade details</div>
-      <div class="profit-meta">
-        <div class="profit-meta-divider"></div>
-        <div class="profit-meta-row">
-          <span class="profit-meta-item" id="metaType">⚡ Long</span>
-          <span class="profit-meta-item" id="metaLeverage">1× Leverage</span>
-          <span class="profit-meta-item" id="metaRoi">ROI: —</span>
+    <!-- PnL Result -->
+    <div class="card" id="profitCard">
+      <div class="card-title">Net Profit / Loss</div>
+      <div class="pnl-main">
+        <div id="profitValue">$—</div>
+      </div>
+      <div id="profitPercent" style="font-size:12px;color:var(--sub);font-family:var(--mono)">Enter your trade details</div>
+ 
+      <div class="meta-row">
+        <span class="meta-pill" id="metaType">⚡ Long</span>
+        <span class="meta-pill" id="metaLeverage">10× Leverage</span>
+        <span class="meta-pill" id="metaRoi">ROI: —</span>
+      </div>
+ 
+      <div class="detail-rows" id="detailRows" style="display:none">
+        <div class="divider"></div>
+        <div class="detail-row">
+          <span class="dk">Position Size</span>
+          <span class="dv" id="positionSize">—</span>
         </div>
-        <div class="profit-meta-divider"></div>
-        <div class="profit-meta-row" id="feeRow" style="display:none;">
-          <span class="profit-meta-item"> Total Fees</span>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="fee-pill" id="feeTypePill">—</span>
-            <span class="profit-meta-item" id="metaFee">—</span>
-          </div>
+        <div class="detail-row">
+          <span class="dk">Gross PnL</span>
+          <span class="dv" id="metaGross">—</span>
         </div>
-        <div class="profit-meta-row" id="grossRow" style="display:none;">
-          <span class="profit-meta-item" style="opacity:0.6;">Gross P&amp;L (before fees)</span>
-          <span class="profit-meta-item" id="metaGross" style="opacity:0.6;">—</span>
+        <div class="detail-row">
+          <span class="dk">Total Fees</span>
+          <span class="dv red" id="metaFee">—</span>
         </div>
       </div>
     </div>
- <div class="liq-card" id="liqCard">
-      <div class="liq-header">
-        <div class="liq-title"> Liquidation Price</div>
-        <div class="liq-warning-badge" id="liqWarningBadge">⚠ </div>
-      </div>
  
-      <div class="liq-body">
-        <div class="liq-price-block">
-          <div class="liq-price-label">Estimated liquidation at</div>
-          <div class="liq-price-value empty" id="liqPriceValue">Enter trade details</div>
-        </div>
-        <div class="liq-distance-block" id="liqDistBlock" style="display:none;">
-          <div class="liq-distance-pill" id="liqDistPill">
-            <span class="liq-dist-pct" id="liqDistPct">—</span>
-            <span class="liq-dist-label" id="liqDistLabel">from entry</span>
-          </div>
-        </div>
-      </div>
+    <!-- Liquidation -->
+    <div class="card">
+      <div class="card-title">Liquidation Price</div>
+      <div class="liq-price-val empty" id="liqPriceValue">Enter trade details</div>
  
-      <div class="liq-progress-wrap" id="liqProgressWrap" style="display:none;">
-        <div class="liq-progress-header">
-          <span>Entry</span>
-          <span id="liqProgressLabel">Distance to liquidation</span>
-          <span>Liquidation</span>
+      <div id="liqBody" style="display:none">
+        <div class="liq-dist-row">
+          <span class="liq-pct" id="liqDistPct"></span>
+          <span style="color:var(--sub)">from entry</span>
+          <span class="liq-badge" id="liqBadge"></span>
         </div>
-        <div class="liq-progress-track">
-          <div class="liq-progress-fill" id="liqProgressFill"></div>
+        <div class="liq-bar-wrap">
+          <div class="liq-bar-fill" id="liqBarFill" style="width:0%"></div>
         </div>
+        <div class="liq-bar-label" id="liqBarLabel"></div>
       </div>
     </div>
-    <!-- Take Profit -->
-    <div class="suggestion-card">
-      <div class="sugg-header">
-        <div class="sugg-title"><span class="sugg-icon-tp">🟢</span> Take Profit Targets</div>
-      </div>
-      <div class="sugg-rows" id="tpRows">
+ 
+    <!-- TP Targets -->
+    <div class="card">
+      <div class="card-title">Take Profit Targets</div>
+      <div class="sugg-list" id="tpRows">
         <div class="empty-state">Fill in your trade to see targets ↑</div>
       </div>
     </div>
  
-    <!-- Stop Loss -->
-    <div class="suggestion-card">
-      <div class="sugg-header">
-        <div class="sugg-title"><span class="sugg-icon-sl">🔴</span> Stop Loss Levels</div>
-      </div>
-      <div class="sugg-rows" id="slRows">
+    <!-- SL Levels -->
+    <div class="card">
+      <div class="card-title">Stop Loss Levels</div>
+      <div class="sugg-list" id="slRows">
         <div class="empty-state">Fill in your trade to see levels ↑</div>
       </div>
     </div>
  
-  </div>
- 
-</main>
-
+  </div><!-- /right col -->
+</div><!-- /layout -->
 
 
 <!-- ─── Footer ─────────────────────────────────────────── -->
