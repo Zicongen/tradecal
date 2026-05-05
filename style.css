@@ -574,6 +574,182 @@
  
   .fee-pill.maker { background: rgba(255,255,255,0.12); }
   .fee-pill.taker { background: rgba(255,100,100,0.25); border-color: rgba(255,150,150,0.3); }
+
+  /* ── Liquidation Price Card ── */
+  .liq-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1.5px solid #fecaca;
+    box-shadow: 0 4px 24px rgba(220, 38, 38, 0.08);
+    padding: 22px 26px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+ 
+  .liq-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #dc2626, #f97316, #dc2626);
+    background-size: 200% 100%;
+    animation: liqShimmer 2.5s linear infinite;
+  }
+ 
+  @keyframes liqShimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+ 
+  .liq-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+ 
+  .liq-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+ 
+  .liq-warning-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    letter-spacing: 0.4px;
+    animation: warningPulse 2s ease infinite;
+  }
+ 
+  @keyframes warningPulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.6; }
+  }
+ 
+  .liq-body {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+ 
+  .liq-price-block { flex: 1; }
+ 
+  .liq-price-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+  }
+ 
+  .liq-price-value {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    color: #dc2626;
+    letter-spacing: -1px;
+    line-height: 1;
+    transition: all 0.35s ease;
+  }
+ 
+  .liq-price-value.empty {
+    color: #d1d5db;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+ 
+  .liq-distance-block {
+    text-align: right;
+    flex-shrink: 0;
+  }
+ 
+  .liq-distance-pill {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fef2f2;
+    border: 1.5px solid #fecaca;
+    border-radius: 12px;
+    padding: 10px 16px;
+    min-width: 80px;
+    transition: all 0.3s;
+  }
+ 
+  .liq-distance-pill.safe {
+    background: #f0fdf4;
+    border-color: var(--g200);
+  }
+ 
+  .liq-dist-pct {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #dc2626;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+ 
+  .liq-dist-pct.safe { color: var(--g600); }
+ 
+  .liq-dist-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: #ef4444;
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+ 
+  .liq-dist-label.safe { color: var(--g500); }
+ 
+  .liq-divider {
+    height: 1px;
+    background: #fee2e2;
+    margin: 14px 0 12px;
+  }
+ 
+  /* Progress bar showing distance to liquidation */
+  .liq-progress-wrap {
+    margin-top: 12px;
+  }
+ 
+  .liq-progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 5px;
+    letter-spacing: 0.3px;
+  }
+ 
+  .liq-progress-track {
+    height: 6px;
+    background: #f3f4f6;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+ 
+  .liq-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--g500), #f97316, #dc2626);
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 0%;
+  }
+ 
  
   /* ── Suggestion cards ── */
   .suggestion-card {
