@@ -341,12 +341,12 @@
 
 footer {
     text-align: center;
-    padding: 32px 24px;
+    padding: 10px;
     font-size: 0.8rem;
     color: #fff;
     font-weight: 500;
-    border-top: 1px solid var(--g100);
+    border-top: 1px solid var(--border);
     letter-spacing: 0.2px;
   }
 
-  footer span { color: var(--accent) font-weight: 600; }
+  footer span { color: var(--accent); font-weight: 600; }
