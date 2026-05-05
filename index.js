@@ -73,10 +73,10 @@ function getRadio(radios) {
 //   Short: price moves opposite direction.
 function calcLiqPrice(entry, leverage, type, entryFeeRate) {
   if (type === 'long') {
-    return entry * (1 - 1/leverage + MAINT_RATE + entryFeeRate);
+    return entry * (1 - 1/leverage  + entryFeeRate);
   } else {
     // Short liq is above entry; entry fee increases required equity so liq is also slightly higher
-    return entry * (1 + 1/leverage - MAINT_RATE - entryFeeRate);
+    return entry * (1 + 1/leverage  - entryFeeRate);
   }
 }
  
@@ -189,7 +189,7 @@ function calculate() {
  
   // ── Update UI ──
   flash(profitValue);
-  profitValue.textContent = fmtSign(netProfit);
+  profitValue.textContent = fmtSign(netProfit,4);
   profitValue.className   = isGain ? '' : 'loss';
  
   const absMove = Math.abs(priceDelta * 100);
@@ -197,7 +197,7 @@ function calculate() {
  
   metaRoi.textContent  = 'ROI: ' + (roi >= 0 ? '+' : '') + fmtN(roi, 2) + '%';
   metaGross.textContent= fmtSign(grossPnl);
-  metaFee.textContent  = '−' + fmtUSD(totalFee);
+  metaFee.textContent  = '−' + fmtUSD(totalFee, 4);
  
   positionSize.textContent = fmtUSD(posSize, 2) + ' (' + lev + '× on ' + fmtUSD(margin, 2) + ')';
   detailRows.style.display = 'flex';
