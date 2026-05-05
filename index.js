@@ -196,7 +196,7 @@ function calculate() {
   profitPct.textContent = (isGain ? '▲' : '▼') + ' ' + fmtN(absMove, 2) + '% price move · ' + lev + '× leverage';
  
   metaRoi.textContent  = 'ROI: ' + (roi >= 0 ? '+' : '') + fmtN(roi, 2) + '%';
-  metaGross.textContent= fmtSign(grossPnl);
+  metaGross.textContent= fmtSign(grossPnl,4);
   metaFee.textContent  = '−' + fmtUSD(totalFee, 4);
  
   positionSize.textContent = fmtUSD(posSize, 2) + ' (' + lev + '× on ' + fmtUSD(margin, 2) + ')';
