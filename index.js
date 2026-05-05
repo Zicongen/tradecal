@@ -1,219 +1,292 @@
-// ── DOM refs ──
-const currentPriceEl  = document.getElementById('currentPrice');
-const futurePriceEl   = document.getElementById('futurePrice');
-const amountEl        = document.getElementById('amount');
-
-const tradeRadios     = document.querySelectorAll('input[name="trade"]');
-const entryTypeRadios = document.querySelectorAll('input[name="entryType"]');
-const exitTypeRadios  = document.querySelectorAll('input[name="exitType"]');
-
-const leverageSlider  = document.getElementById('leverageSlider');
-const leverageDisplay = document.getElementById('leverageDisplay');
-const levBtns         = document.querySelectorAll('.lev-btn');
-
-const profitValue     = document.getElementById('profitValue');
-const profitPercent   = document.getElementById('profitPercent');
-
-const metaType        = document.getElementById('metaType');
-const metaLeverage    = document.getElementById('metaLeverage');
-const metaRoi         = document.getElementById('metaRoi');
-const metaFee         = document.getElementById('metaFee');
-const metaGross       = document.getElementById('metaGross');
-
-const feeRow          = document.getElementById('feeRow');
-const grossRow        = document.getElementById('grossRow');
-const feeTypePill     = document.getElementById('feeTypePill');
-
-const tpRows          = document.getElementById('tpRows');
-const slRows          = document.getElementById('slRows');
-
-const profitCard      = document.getElementById('profitCard');
-
-const positionInfo    = document.getElementById('positionInfo');
-const positionSize    = document.getElementById('positionSize');
-
-const entryFeeTag     = document.getElementById('entryFeeTag');
-const exitFeeTag      = document.getElementById('exitFeeTag');
-
-// Liq refs
-const liqPriceValue   = document.getElementById('liqPriceValue');
-const liqDistBlock    = document.getElementById('liqDistBlock');
-const liqDistPill     = document.getElementById('liqDistPill');
-const liqDistPct      = document.getElementById('liqDistPct');
-const liqDistLabel    = document.getElementById('liqDistLabel');
-const liqProgressWrap = document.getElementById('liqProgressWrap');
-const liqProgressFill = document.getElementById('liqProgressFill');
-const liqProgressLabel= document.getElementById('liqProgressLabel');
-const liqWarningBadge = document.getElementById('liqWarningBadge');
-
 // ── Constants ──
-const MAKER_FEE  = 0.00020; // 0.020%
-const TAKER_FEE  = 0.00050; // 0.050%
-const MAINT_RATE = 0.005;    // 0.50%
-
+const MAKER_FEE  = 0.0002;  // 0.020%
+const TAKER_FEE  = 0.0005;  // 0.050%
+const MAINT_RATE = 0;   // 0% maintenance margin
+ 
+// ── DOM ──
+const entryEl    = document.getElementById('currentPrice');
+const exitEl     = document.getElementById('futurePrice');
+const marginEl   = document.getElementById('amount');
+const leverSlider= document.getElementById('leverageSlider');
+const leverDisp  = document.getElementById('leverageDisplay');
+const levBtns    = document.querySelectorAll('.lev-btn');
+const tradeRadios= document.querySelectorAll('input[name="trade"]');
+const entryRadios= document.querySelectorAll('input[name="entryType"]');
+const exitRadios = document.querySelectorAll('input[name="exitType"]');
+ 
+const profitValue  = document.getElementById('profitValue');
+const profitPct    = document.getElementById('profitPercent');
+const metaType     = document.getElementById('metaType');
+const metaLeverage = document.getElementById('metaLeverage');
+const metaRoi      = document.getElementById('metaRoi');
+const metaGross    = document.getElementById('metaGross');
+const metaFee      = document.getElementById('metaFee');
+const detailRows   = document.getElementById('detailRows');
+const profitCard   = document.getElementById('profitCard');
+const positionSize = document.getElementById('positionSize');
+const entryFeeTag  = document.getElementById('entryFeeTag');
+const exitFeeTag   = document.getElementById('exitFeeTag');
+const tpRows       = document.getElementById('tpRows');
+const slRows       = document.getElementById('slRows');
+ 
+const liqPriceValue= document.getElementById('liqPriceValue');
+const liqBody      = document.getElementById('liqBody');
+const liqDistPct   = document.getElementById('liqDistPct');
+const liqBadge     = document.getElementById('liqBadge');
+const liqBarFill   = document.getElementById('liqBarFill');
+const liqBarLabel  = document.getElementById('liqBarLabel');
+ 
 // ── Helpers ──
-const fmt = n => Number(n || 0).toLocaleString('en-US', {
-  minimumFractionDigits: 4,
-  maximumFractionDigits: 4
-});
-
-const fmtPrice = p => '$' + fmt(p);
-
-function animateEl(el) {
-  el.classList.remove('value-updated');
+function fmtN(n, d=4) {
+  return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function fmtUSD(n, d=2) {
+  return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function fmtSign(n, d=2) {
+  const s = n >= 0 ? '+' : '−';
+  return s + '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function flash(el) {
+  el.classList.remove('flash');
   void el.offsetWidth;
-  el.classList.add('value-updated');
+  el.classList.add('flash');
 }
-
-function getTradeType() {
-  for (const r of tradeRadios) if (r.checked) return r.value;
-  return 'long';
+ 
+function getRadio(radios) {
+  for (const r of radios) if (r.checked) return r.value;
 }
-
-function getLeverage() {
-  return Math.max(1, Math.min(100, parseInt(leverageSlider.value || 1)));
+ 
+// ── Liquidation Price ──
+// Cross-margin isolated liq formula:
+//   Long:  LiqPrice = Entry × (1 − 1/L + MMR + entryFeeRate)
+//   Short: LiqPrice = Entry × (1 + 1/L − MMR − entryFeeRate)
+//
+// Derivation:
+//   Account equity at liq = MaintenanceMargin
+//   Equity = Margin + UnrealizedPnL - Fees
+//   For Long:  UnrealizedPnL = posSize × (liq/entry − 1)
+//              Equity = Margin + posSize×(liq/entry − 1) − entryFee
+//              At liq: Equity = posSize × MMR  (maintenance margin)
+//   Solving for liq gives the formula above.
+//
+//   Short: price moves opposite direction.
+function calcLiqPrice(entry, leverage, type, entryFeeRate) {
+  if (type === 'long') {
+    return entry * (1 - 1/leverage + MAINT_RATE + entryFeeRate);
+  } else {
+    // Short liq is above entry; entry fee increases required equity so liq is also slightly higher
+    return entry * (1 + 1/leverage - MAINT_RATE - entryFeeRate);
+  }
 }
-
-function getEntryOrderType() {
-  for (const r of entryTypeRadios) if (r.checked) return r.value;
-  return 'market';
+ 
+// ── Fee rate getters ──
+function entryFeeRate() { return getRadio(entryRadios) === 'limit' ? MAKER_FEE : TAKER_FEE; }
+function exitFeeRate()  { return getRadio(exitRadios)  === 'limit' ? MAKER_FEE : TAKER_FEE; }
+ 
+// ── Update fee tags ──
+function updateFeeTags() {
+  const eType = getRadio(entryRadios);
+  const xType = getRadio(exitRadios);
+  entryFeeTag.textContent = eType === 'limit' ? 'Entry: 0.020% (Maker)' : 'Entry: 0.050% (Taker)';
+  exitFeeTag.textContent  = xType === 'limit' ? 'Exit: 0.020% (Maker)'  : 'Exit: 0.050% (Taker)';
 }
-
-function getExitOrderType() {
-  for (const r of exitTypeRadios) if (r.checked) return r.value;
-  return 'market';
-}
-
-function feeRate(type) {
-  return type === 'limit' ? MAKER_FEE : TAKER_FEE;
-}
-
+ 
 // ── Leverage UI ──
-function setLeverage(val) {
-  val = Math.max(1, Math.min(100, parseInt(val)));
-  leverageSlider.value = val;
-  leverageDisplay.textContent = val + '×';
-  levBtns.forEach(b =>
-    b.classList.toggle('active', parseInt(b.dataset.lev) === val)
-  );
+function setLeverage(v) {
+  v = Math.max(1, Math.min(100, parseInt(v, 10)));
+  leverSlider.value = v;
+  leverDisp.textContent = v + '×';
+  levBtns.forEach(b => b.classList.toggle('active', parseInt(b.dataset.lev) === v));
   calculate();
 }
-
-leverageSlider.addEventListener('input', e => setLeverage(e.target.value));
+leverSlider.addEventListener('input', () => setLeverage(leverSlider.value));
 levBtns.forEach(b => b.addEventListener('click', () => setLeverage(b.dataset.lev)));
-
-entryTypeRadios.forEach(r => r.addEventListener('change', calculate));
-exitTypeRadios.forEach(r => r.addEventListener('change', calculate));
-tradeRadios.forEach(r => r.addEventListener('change', calculate));
-
-// ── Liquidation ──
-function calcLiq(entry, lev, type, entryFeeRate) {
-  if (type === 'long') {
-    return entry * (1 - (1 / lev) + MAINT_RATE + entryFeeRate);
-  }
-  return entry * (1 + (1 / lev) - MAINT_RATE + entryFeeRate);
-}
-
-function updateLiq(cp, lev, type, entryFeeRate) {
-  if (!cp || !lev) return;
-
-  const liq = calcLiq(cp, lev, type, entryFeeRate);
-  const dist = Math.abs((liq - cp) / cp) * 100;
-
-  liqPriceValue.textContent = fmtPrice(liq);
-
-  liqDistBlock.style.display = 'flex';
-  liqDistPct.textContent = fmt(dist) + '%';
-
-  liqProgressWrap.style.display = 'block';
-  liqProgressFill.style.width = Math.min(99, Math.max(2, 100 - dist)) + '%';
-
-  if (dist < 5) liqWarningBadge.textContent = '🔥 EXTREME DANGER';
-  else if (dist < 15) liqWarningBadge.textContent = '⚠ HIGH RISK';
-  else liqWarningBadge.textContent = '✅ OK';
-}
-
-// ── MAIN CALC ──
+ 
+// ── Main ──
 function calculate() {
-  const cp = parseFloat(currentPriceEl.value);
-  const fp = parseFloat(futurePriceEl.value);
-  const margin = parseFloat(amountEl.value);
-
-  const type = getTradeType();
-  const lev = getLeverage();
-
-  const entryType = getEntryOrderType();
-  const exitType = getExitOrderType();
-
-  const entryFeeRate = feeRate(entryType);
-  const exitFeeRate  = feeRate(exitType);
-
-  metaType.textContent = type.toUpperCase();
-  metaLeverage.textContent = lev + '×';
-
-  updateLiq(cp, lev, type, entryFeeRate);
-
-  if (!cp || !fp || !margin || cp <= 0 || fp <= 0 || margin <= 0) return;
-
+  const cp     = parseFloat(entryEl.value);
+  const fp     = parseFloat(exitEl.value);
+  const margin = parseFloat(marginEl.value);
+  const type   = getRadio(tradeRadios);
+  const lev    = parseInt(leverSlider.value, 10);
+  const ef     = entryFeeRate();
+  const xf     = exitFeeRate();
+ 
+  metaType.textContent     = type === 'long' ? '⬆ Long' : '⬇ Short';
+  metaLeverage.textContent = lev + '× Leverage';
+ 
+  // ── Liq card (only needs entry price) ──
+  if (cp > 0 && lev > 0) {
+    const liqPrice  = calcLiqPrice(cp, lev, type, ef);
+    const distPct   = Math.abs((liqPrice - cp) / cp) * 100;
+ 
+    liqPriceValue.textContent = fmtUSD(liqPrice, 4);
+    liqPriceValue.className   = 'liq-price-val';
+    liqBody.style.display     = 'block';
+ 
+    liqDistPct.textContent = fmtN(distPct, 2) + '%';
+    liqBarLabel.textContent = fmtN(distPct, 2) + '% away from liquidation';
+ 
+    const fillPct = Math.min(98, Math.max(2, 100 - distPct));
+    liqBarFill.style.width = fillPct + '%';
+ 
+    liqDistPct.className = distPct >= 20 ? 'liq-pct safe' : 'liq-pct risky';
+ 
+    if (distPct < 5) {
+      liqBadge.textContent = '🔥 EXTREME DANGER';
+      liqBadge.className   = 'liq-badge danger';
+    } else if (distPct < 15) {
+      liqBadge.textContent = '⚠ HIGH RISK';
+      liqBadge.className   = 'liq-badge danger';
+    } else if (distPct < 30) {
+      liqBadge.textContent = '⚠ MODERATE RISK';
+      liqBadge.className   = 'liq-badge';
+    } else {
+      liqBadge.textContent = '✅ LOWER RISK';
+      liqBadge.className   = 'liq-badge safe';
+    }
+  } else {
+    liqPriceValue.textContent = 'Enter trade details';
+    liqPriceValue.className   = 'liq-price-val empty';
+    liqBody.style.display     = 'none';
+  }
+ 
+  // ── PnL needs all three inputs ──
+  if (!cp || !fp || !margin || cp <= 0 || fp <= 0 || margin <= 0) {
+    profitValue.textContent   = '$—';
+    profitValue.className     = '';
+    profitPct.textContent     = 'Enter your trade details';
+    metaRoi.textContent       = 'ROI: —';
+    detailRows.style.display  = 'none';
+    profitCard.classList.remove('loss');
+    tpRows.innerHTML = '<div class="empty-state">Fill in your trade to see targets ↑</div>';
+    slRows.innerHTML = '<div class="empty-state">Fill in your trade to see levels ↑</div>';
+    return;
+  }
+ 
+  // ── Core calculations ──
+  // Position (notional) size
   const posSize = margin * lev;
-
-  const entryFee = posSize * entryFeeRate;
-  const exitFee  = posSize * exitFeeRate;
-  const totalFee = entryFee + exitFee;
-
-  const change = (fp - cp) / cp;
-  const dir = type === 'long' ? 1 : -1;
-
-  const gross = posSize * change * dir;
-  const net = gross - totalFee;
-
-  const roi = (net / margin) * 100;
-
-  profitValue.textContent = (net >= 0 ? '+' : '-') + '$' + fmt(Math.abs(net));
-  metaRoi.textContent = 'ROI ' + fmt(roi) + '%';
-  metaFee.textContent = '-$' + fmt(totalFee);
-  metaGross.textContent = (gross >= 0 ? '+' : '') + '$' + fmt(gross);
-
-  positionInfo.style.display = 'flex';
-  positionSize.textContent = '$' + fmt(posSize);
-
-  feeTypePill.textContent =
-    `Entry:${entryType} · Exit:${exitType}`;
-
-  // ── TP ──
-  const tps = [1, 5, 10];
-  tpRows.innerHTML = '';
-
-  tps.forEach(p => {
-    const r = p / 100;
-    const tpGross = posSize * r;
-    const tpNet = tpGross - totalFee;
-
-    tpRows.innerHTML += `
+ 
+  // Fees are based on notional value
+  // Entry fee: on entry notional (posSize at entry price)
+  // Exit fee:  on exit notional (posSize × exitPrice/entryPrice)
+  //            simplified: we use posSize for entry notional; exit notional = posSize × (fp/cp)
+  const entryNotional = posSize;                         // notional at entry
+  const exitNotional  = posSize * (fp / cp);             // notional at actual exit price
+ 
+  const entryFee  = entryNotional * ef;
+  const exitFee   = exitNotional  * xf;
+  const totalFee  = entryFee + exitFee;
+ 
+  // PnL direction: long profits when fp > cp, short profits when fp < cp
+  const priceDelta = (fp - cp) / cp;
+  const grossPnl   = posSize * priceDelta * (type === 'long' ? 1 : -1);
+  const netProfit  = grossPnl - totalFee;
+  const roi        = (netProfit / margin) * 100;
+  const isGain     = netProfit >= 0;
+ 
+  // ── Update UI ──
+  flash(profitValue);
+  profitValue.textContent = fmtSign(netProfit);
+  profitValue.className   = isGain ? '' : 'loss';
+ 
+  const absMove = Math.abs(priceDelta * 100);
+  profitPct.textContent = (isGain ? '▲' : '▼') + ' ' + fmtN(absMove, 2) + '% price move · ' + lev + '× leverage';
+ 
+  metaRoi.textContent  = 'ROI: ' + (roi >= 0 ? '+' : '') + fmtN(roi, 2) + '%';
+  metaGross.textContent= fmtSign(grossPnl);
+  metaFee.textContent  = '−' + fmtUSD(totalFee);
+ 
+  positionSize.textContent = fmtUSD(posSize, 2) + ' (' + lev + '× on ' + fmtUSD(margin, 2) + ')';
+  detailRows.style.display = 'flex';
+ 
+  if (isGain) {
+    profitCard.style.background = 'linear-gradient(135deg,#0d1f18 0%,#112419 60%,#162c1f 100%)';
+    profitCard.style.borderColor= 'rgba(0,229,160,.25)';
+    profitCard.classList.remove('loss');
+  } else {
+    profitCard.style.background = 'linear-gradient(135deg,#1f0d0d 0%,#241111 60%,#2c1212 100%)';
+    profitCard.style.borderColor= 'rgba(255,77,77,.25)';
+    profitCard.classList.add('loss');
+  }
+ 
+  // ── Take Profit rows ──
+  // Correct TP PnL:
+  //   - tpGross = posSize × (tpPrice/cp − 1) × direction_multiplier
+  //   - tpExitFee = (posSize × tpPrice/cp) × xf   ← exit at TP notional
+  //   - tpNet = tpGross − entryFee − tpExitFee
+  const tpDefs = [
+    { pct: 1,  label: 'Conservative' },
+    { pct: 5,  label: 'Moderate'     },
+    { pct: 10, label: 'Aggressive'   },
+  ];
+  let tpHTML = '';
+  tpDefs.forEach(({ pct, label }) => {
+    const ratio    = pct / 100;
+    const tpPrice  = type === 'long' ? cp * (1 + ratio) : cp * (1 - ratio);
+    const tpNotional = posSize * (tpPrice / cp);
+    const tpGross  = posSize * ratio;          // always positive (we pick the right direction)
+    const tpFeeExit= tpNotional * xf;
+    const tpNet    = tpGross - entryFee - tpFeeExit;
+    const tpRoi    = (tpNet / margin) * 100;
+ 
+    tpHTML += `
       <div class="sugg-row">
-        <span>+${p}%</span>
-        <span>${fmtPrice(type === 'long' ? cp * (1 + r) : cp * (1 - r))}</span>
-        <span>${tpNet >= 0 ? '+' : ''}$${fmt(tpNet)}</span>
+        <div class="sugg-left">
+          <span class="sugg-badge">+${pct}%</span>
+          <span class="sugg-name">${label}</span>
+        </div>
+        <div class="sugg-right">
+          <span class="sugg-price">${fmtUSD(tpPrice, 4)}</span>
+          <span class="sugg-gain">${fmtSign(tpNet)} · ROI ${fmtN(tpRoi, 2)}%</span>
+        </div>
       </div>`;
   });
-
-  // ── SL ──
-  const sls = [1, 5, 10];
-  slRows.innerHTML = '';
-
-  sls.forEach(p => {
-    const r = p / 100;
-    const slGross = posSize * r;
-    const slNet = -(slGross + totalFee);
-
-    slRows.innerHTML += `
+  tpRows.innerHTML = tpHTML;
+ 
+  // ── Stop Loss rows ──
+  // Correct SL PnL:
+  //   - slGross = −(posSize × ratio)                ← negative: we lost this
+  //   - slExitFee = (posSize × slPrice/cp) × xf     ← exit at SL notional
+  //   - slNet = slGross − entryFee − slExitFee       ← both are costs
+  const slDefs = [
+    { pct: 1,  label: 'Tight'    },
+    { pct: 5,  label: 'Standard' },
+    { pct: 10, label: 'Wide'     },
+  ];
+  let slHTML = '';
+  slDefs.forEach(({ pct, label }) => {
+    const ratio    = pct / 100;
+    const slPrice  = type === 'long' ? cp * (1 - ratio) : cp * (1 + ratio);
+    const slNotional = posSize * (slPrice / cp);
+    const slGross  = -(posSize * ratio);       // negative (loss on position)
+    const slFeeExit= slNotional * xf;
+    const slNet    = slGross - entryFee - slFeeExit;  // negative total
+    const slRoi    = (slNet / margin) * 100;   // negative ROI
+ 
+    slHTML += `
       <div class="sugg-row">
-        <span>-${p}%</span>
-        <span>${fmtPrice(type === 'long' ? cp * (1 - r) : cp * (1 + r))}</span>
-        <span>${fmt(slNet)}</span>
+        <div class="sugg-left">
+          <span class="sugg-badge sl">−${pct}%</span>
+          <span class="sugg-name">${label}</span>
+        </div>
+        <div class="sugg-right">
+          <span class="sugg-price" style="color:var(--red)">${fmtUSD(slPrice, 4)}</span>
+          <span class="sugg-loss">${fmtSign(slNet)} · ROI ${fmtN(slRoi, 2)}%</span>
+        </div>
       </div>`;
   });
+  slRows.innerHTML = slHTML;
 }
-
-// ── INIT ──
+ 
+// ── Event Listeners ──
+[entryEl, exitEl, marginEl].forEach(el => el.addEventListener('input', calculate));
+tradeRadios.forEach(r  => r.addEventListener('change', calculate));
+entryRadios.forEach(r  => r.addEventListener('change', () => { updateFeeTags(); calculate(); }));
+exitRadios.forEach(r   => r.addEventListener('change', () => { updateFeeTags(); calculate(); }));
+ 
+// ── Init ──
+updateFeeTags();
 calculate();
